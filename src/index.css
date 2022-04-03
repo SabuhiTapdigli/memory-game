@@ -1,6 +1,34 @@
+
 .show{
-    transform:rotateY(0deg);
+    transform: rotateY(180deg);
+    pointer-events: none;
 }
-.hide{
-    transform:rotateY(90deg);
+.active{
+    background-color:green;
+}
+.select{
+    display: block !important;
+}
+.player-btn{
+	font-family: 'Press Start 2p';
+    text-align: center;
+    font-weight: bold;
+    padding: 15px 10px 15px 10px ;
+    background-color: lightgray;
+    text-shadow: -1px -1px black, 1px 1px white;
+    color: gray;
+    -webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+    -o-border-radius: 7px;
+    border-radius: 7px;
+    box-shadow: 0 .2em gray; 
+    cursor: pointer;
+    font-size: 20px;
+    width: max-content;
+    margin: 10px auto;
+}
+.player-btn:active{
+    box-shadow: none;
+    position: relative;
+    top: .2em;
 }

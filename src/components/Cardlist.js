@@ -1,47 +1,65 @@
 import styled from 'styled-components'
 import {useState} from 'react'
+import craft from '../img/logo.png'
 
 const Cardlist = ({card,selectcard,flip}) => {
-    // console.log('card',card)
 
     const imghandler = () => {
         selectcard(card)
     }
     return(
-        <Card>
-            <SingleCard>
-                <Front className={flip ? 'show' : 'hide'}><img src={card.src} onClick={imghandler} alt='img'/></Front>
-                <Back onClick={imghandler}></Back>
-            </SingleCard>
-        </Card>
+        <FlipCard>
+            <FlipCardInner className={flip && 'show'}>
+                <FlipCardFront onClick={imghandler} >
+                    <img src={card.url} alt='img'/>
+                </FlipCardFront>
+                <FlipCardBack onClick={imghandler}>
+                    <img src={craft} alt='logo'/>
+                </FlipCardBack>
+            </FlipCardInner>
+        </FlipCard>
     )
 }
 
-const Card = styled.div`
-    position:relative;
+const FlipCard = styled.div`
+    // background-color: transparent;
+    width: 167px;
+    height: 167px;
+    perspective: 1000px;
 `
-const SingleCard = styled.div`
-    
+const FlipCardInner = styled.div`
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     div{
-      width:167px;
-      height:167px;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+
     }
-`
-const Front = styled.div`
-    position:absolute;
-    // transform:${({ flipp }) => (flipp ? "rotateY(0deg)" : "rotateY(90deg)")};
-    transition: all ease-in 0.2s;
-    transition-delay:0.2s;
     img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-    }
+        width:100%;
+        height:100%;
+      }
 `
-const Back = styled.div`
-    // transform:rotate(90deg);
-    background-color:gray;
-    transition-delay:0s;
+const FlipCardFront = styled.div`
+    transform: rotateY(180deg);
+    img{
+        object-fit:cover;
+    }
+   
+`
+const FlipCardBack = styled.div`
+    img{
+        object-fit:contain;
+    }
+    
+    
 `
 
 export default Cardlist
