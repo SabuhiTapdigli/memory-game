@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { useState } from 'react'
-const Gamestart = ({Restartgame,setplayercount}) => {
+const Gamestart = ({restartGame,setplayercount}) => {
     const [multiplayer, setmultiplayer] = useState(false)
     const [showbtn, setshowbtn] = useState(false)
 
@@ -12,7 +12,7 @@ const Gamestart = ({Restartgame,setplayercount}) => {
     }
     return(
         <>
-            <Play onClick={showbtn ? Restartgame: Startgame} 
+            <Play onClick={showbtn ? restartGame: Startgame} 
                   className='player-btn'> {showbtn ? 'Restart Game' : 'Play Game'}
             </Play>
             {

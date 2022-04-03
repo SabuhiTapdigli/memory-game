@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useState, useEffect } from 'react';
+import { useState, useEffect,useCallback } from 'react';
 import styled from 'styled-components'
 import Cardlist from './components/Cardlist';
 import Gamestart from './components/GameStart';
@@ -26,23 +26,21 @@ function App() {
   const [queue,setqueue] = useState(1)
   const [win,setwin] = useState(0)
 
-  const playgame = () => {
-    if(playercount){
+  const playGame = () => {
       const alldata = [...data,...data]
       .sort(()=> 0.5-Math.random())
       .map((card)=>({...card, id: Math.random()}))
       setcards(alldata)
       setcount(0)
-    }
   }
 
-  const selectcard = (card) => {
+  const selectCard = (card) => {
     if((firstcard !== card) && (!firstcard || !secondcard)){
       firstcard ? setsecondcard(card) : setfirstcard(card)
     }
   }
 
-  const Resultobj = () =>{
+  const resultObj = () =>{
     setplayerlist([...Array(playercount).keys()].map((i)=>(
       {id:i+1,result:0,turns:0}
       )))
@@ -85,10 +83,10 @@ function App() {
         return{...i}
       }
     }))
-    reset()
+    resetCard()
   }
 
-  const reset = () => {
+  const resetCard = () => {
     setcount(count + 1)
     setTimeout(() => {
       setfirstcard(null)
@@ -96,15 +94,15 @@ function App() {
     }, 1000);
   }
 
-  const Restartgame = () => {
-    Resultobj()
-    playgame()
+  const restartGame = () => {
+    resultObj()
+    playGame()
     setqueue(1)
   }
   
   useEffect(()=>{
-    playgame()
-    Resultobj()
+    playGame()
+    resultObj()
   }, [playercount])
 
   
@@ -116,7 +114,7 @@ function App() {
       }
       else{
         addTurns()
-        reset()
+        resetCard()
       }
     }
   }, [firstcard,secondcard])
@@ -124,7 +122,7 @@ function App() {
   
     return (
     <Container>
-        <Gamestart playgame = {playgame} Restartgame = {Restartgame} setplayercount={setplayercount} />
+        <Gamestart playgame = {playGame} restartGame = {restartGame} setplayercount={setplayercount} />
         <Playerwrapper>
             {playerlist.map((player)=>(
               <Players key = {player.id} player = {player} queue={queue}/>
@@ -135,7 +133,7 @@ function App() {
               <Cardlist 
                 key={card.id}
                 card={card}
-                selectcard={selectcard} 
+                selectcard={selectCard} 
                 flip = {card === firstcard || card === secondcard || card.selected}
                 hideimg = {card.selected}/>
             ))}
