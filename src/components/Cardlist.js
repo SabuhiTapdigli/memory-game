@@ -2,15 +2,15 @@ import styled from 'styled-components'
 import {useState} from 'react'
 import craft from '../img/logo.png'
 
-const Cardlist = ({card,selectcard,flip}) => {
+const Cardlist = ({card,selectcard,flip,hideimg}) => {
 
     const imghandler = () => {
         selectcard(card)
     }
     return(
         <FlipCard>
-            <FlipCardInner className={flip && 'show'}>
-                <FlipCardFront onClick={imghandler} >
+            <FlipCardInner className={flip && 'show'} id={hideimg && 'hide'}>
+                <FlipCardFront onClick={imghandler}>
                     <img src={card.url} alt='img'/>
                 </FlipCardFront>
                 <FlipCardBack onClick={imghandler}>
@@ -22,9 +22,8 @@ const Cardlist = ({card,selectcard,flip}) => {
 }
 
 const FlipCard = styled.div`
-    // background-color: transparent;
-    width: 167px;
-    height: 167px;
+    width: 150px;
+    height: 150px;
     perspective: 1000px;
 `
 const FlipCardInner = styled.div`

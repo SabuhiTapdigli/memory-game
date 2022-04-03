@@ -4,9 +4,11 @@ import styled from 'styled-components'
 import Cardlist from './components/Cardlist';
 import Gamestart from './components/GameStart';
 import Players from './components/Players';
+import Winner from './components/Winner';
 
 
 function App() {
+  // Fecth data
   const [data,setdata] = useState([])
 
   useEffect(()=>{
@@ -22,40 +24,7 @@ function App() {
   const [playercount,setplayercount] = useState(0)
   const [playerlist,setplayerlist] = useState([])
   const [queue,setqueue] = useState(1)
-  const [showbtn, setshowbtn] = useState(false)
-
-  useEffect(()=>{
-    setplayerlist([...Array(playercount).keys()].map((i)=>(
-      {id:i+1,result:0}
-      )))
-  },[playercount])
-
-  useEffect(()=>{
-    if(firstcard && secondcard){
-      if(firstcard.url === secondcard.url){
-        setplayerlist(playerlist.map((eachplayer)=>{
-          if(eachplayer.id === queue){
-            return{...eachplayer,result:eachplayer.result+1}
-          }
-          else{
-            return{...eachplayer}
-          }
-        }))
-      }
-      else{
-        if(queue === playercount){
-          setqueue(1)
-        }
-        else{
-          setqueue(queue+1)
-        }
-        console.log('queue',queue)
-        
-      }
-    }
-    
-  },[firstcard,secondcard])
- console.log(playerlist)
+  const [win,setwin] = useState(0)
 
   const playgame = () => {
     if(playercount){
@@ -65,7 +34,6 @@ function App() {
       setcards(alldata)
       setcount(0)
     }
-    setshowbtn(true)
   }
 
   const selectcard = (card) => {
@@ -73,24 +41,52 @@ function App() {
       firstcard ? setsecondcard(card) : setfirstcard(card)
     }
   }
-  useEffect(()=>{
-    if(firstcard && secondcard){
-      if(firstcard.url === secondcard.url){
-        setcards(cards.map((i)=>{
-            if(i.url === firstcard.url){
-              return{...i,selected:true}
-            }
-            else{
-              return{...i}
-            }
-        }))
-        reset()
+
+  const Resultobj = () =>{
+    setplayerlist([...Array(playercount).keys()].map((i)=>(
+      {id:i+1,result:0,turns:0}
+      )))
+  }
+  const addResult = () => {
+    setwin(win+1)
+    setplayerlist(playerlist.map((eachplayer)=>{
+      if(eachplayer.id === queue){
+        return{...eachplayer,result:eachplayer.result+1,turns:eachplayer.turns+1}
       }
       else{
-        reset()
+        return{...eachplayer}
       }
+    }))
+  }
+
+  const addTurns = () => {
+    setplayerlist(playerlist.map((eachplayer)=>{
+      if(eachplayer.id === queue){
+        return{...eachplayer,turns:eachplayer.turns+1}
+      }
+      else{
+        return{...eachplayer}
+      }
+    }))
+    if(queue === playercount){
+      setqueue(1)
     }
-  },[firstcard,secondcard])
+    else{
+      setqueue(queue+1)
+    }
+  }
+
+  const addTruechoice = () => {
+    setcards(cards.map((i)=>{
+      if(i.url === firstcard.url){
+        return{...i,selected:true}
+      }
+      else{
+        return{...i}
+      }
+    }))
+    reset()
+  }
 
   const reset = () => {
     setcount(count + 1)
@@ -99,32 +95,61 @@ function App() {
       setsecondcard(null)
     }, 1000);
   }
+
+  const Restartgame = () => {
+    Resultobj()
+    playgame()
+    setqueue(1)
+  }
+  
+  useEffect(()=>{
+    playgame()
+    Resultobj()
+  },[playercount])
+
+  
+  useEffect(()=>{
+    if(firstcard && secondcard){
+      if(firstcard.url === secondcard.url){
+        addResult()
+        addTruechoice()
+      }
+      else{
+        addTurns()
+        reset()
+      }
+    }
+  },[firstcard,secondcard])
+
+  
     return (
     <Container>
-      <Gamestart playgame = {playgame} setplayercount={setplayercount} />
-      <Playerwrapper>
-          {playerlist.map((player)=>(
-            <Players key = {player.id} player = {player} queue={queue}/>
-          ))}
-      </Playerwrapper>
+        <Gamestart playgame = {playgame} Restartgame = {Restartgame} setplayercount={setplayercount} />
+        <Playerwrapper>
+            {playerlist.map((player)=>(
+              <Players key = {player.id} player = {player} queue={queue}/>
+            ))}
+        </Playerwrapper>
         <Cardwrapper>
             {cards && cards.map((card)=>(
               <Cardlist 
                 key={card.id}
                 card={card}
                 selectcard={selectcard} 
-                flip = {card === firstcard || card === secondcard || card.selected}/>
+                flip = {card === firstcard || card === secondcard || card.selected}
+                hideimg = {card.selected}/>
             ))}
          </Cardwrapper>
-         
+            {win === 12 && <Winner playerlist={playerlist} /> }
     </Container>
   );
 }
 
 const Container = styled.div`
     text-align:center;
-    width:1200px;
+    width:1100px;
     margin:auto;
+    position:relative;
 `
 const Playerwrapper = styled.div`
     display:flex;
@@ -134,10 +159,10 @@ const Playerwrapper = styled.div`
     }
 `
 const Cardwrapper = styled.div`
-    margin-top:20px;
+    margin:20px 0;
     display:grid;
     grid-template-columns: repeat(6,1fr);
-    grid-gap:20px;
+    grid-gap:10px;
 `
 
 
