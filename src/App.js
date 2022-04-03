@@ -15,7 +15,7 @@ function App() {
     axios.get('https://api.thecatapi.com/v1/images/search?limit=12&page=10&order=Desc')
     .then((res)=> setdata(res.data))
     .catch((err)=>console.log(err))
-  },[])
+  }, [])
   
   const [cards,setcards] = useState([])
   const [firstcard, setfirstcard] = useState(null)
@@ -105,7 +105,7 @@ function App() {
   useEffect(()=>{
     playgame()
     Resultobj()
-  },[playercount])
+  }, [playercount])
 
   
   useEffect(()=>{
@@ -119,7 +119,7 @@ function App() {
         reset()
       }
     }
-  },[firstcard,secondcard])
+  }, [firstcard,secondcard])
 
   
     return (
@@ -140,7 +140,7 @@ function App() {
                 hideimg = {card.selected}/>
             ))}
          </Cardwrapper>
-            {win === 12 && <Winner playerlist={playerlist} /> }
+            {win === 12 && <Winner playerlist={playerlist} setwin={setwin}/> }
     </Container>
   );
 }

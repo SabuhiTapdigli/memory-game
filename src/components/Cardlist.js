@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import {useState} from 'react'
 import craft from '../img/logo.png'
 
 const Cardlist = ({card,selectcard,flip,hideimg}) => {
