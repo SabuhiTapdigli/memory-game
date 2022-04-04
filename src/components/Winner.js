@@ -1,6 +1,8 @@
 import styled from "styled-components"
 
 const Winner = ({setwin,playerlist}) =>{
+
+
     const winner = playerlist.reduce((prev,next) => {
         if(prev.result > next.result){
             return  prev  
@@ -17,12 +19,11 @@ const Winner = ({setwin,playerlist}) =>{
             }
         }
     })
-    console.log(winner)
     return(
         <Winnerwrapper>
             {winner.id === 'draw' ? <h1>The game is draw</h1> : <h1>The winner is Player {winner.id}</h1>}
             <p> Pairs found {winner.result} </p>
-            <p> The Best Turn Score is {winner.turns} </p>
+            <p> Winner Turn Score is {winner.turns}</p>
             <button onClick={()=>setwin(0)}>Close</button>
         </Winnerwrapper>
     )

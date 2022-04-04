@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useState, useEffect,useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components'
 import Cardlist from './components/Cardlist';
 import Gamestart from './components/GameStart';
@@ -10,9 +10,9 @@ import Winner from './components/Winner';
 function App() {
   // Fecth data
   const [data,setdata] = useState([])
-
+  const imgcount = 4
   useEffect(()=>{
-    axios.get('https://api.thecatapi.com/v1/images/search?limit=12&page=10&order=Desc')
+    axios.get(`https://api.thecatapi.com/v1/images/search?limit=${imgcount}&page=10&order=Desc`)
     .then((res)=> setdata(res.data))
     .catch((err)=>console.log(err))
   }, [])
@@ -103,6 +103,7 @@ function App() {
   useEffect(()=>{
     playGame()
     resultObj()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playercount])
 
   
@@ -117,6 +118,7 @@ function App() {
         resetCard()
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [firstcard,secondcard])
 
   
@@ -138,7 +140,7 @@ function App() {
                 hideimg = {card.selected}/>
             ))}
          </Cardwrapper>
-            {win === 12 && <Winner playerlist={playerlist} setwin={setwin}/> }
+            {win === imgcount && <Winner playerlist={playerlist} setwin={setwin}/> }
     </Container>
   );
 }
